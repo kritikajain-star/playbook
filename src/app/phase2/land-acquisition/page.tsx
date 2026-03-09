@@ -1,141 +1,116 @@
 import Link from 'next/link';
-import { ArrowLeft, Upload, Calendar } from 'lucide-react';
+import { ArrowLeft, Upload, Calendar, MapPin } from 'lucide-react';
+
+const InputRow = ({ item }: { item: string }) => (
+  <tr className="border-b border-slate-50 hover:bg-slate-50/70 transition-colors group">
+    <td className="px-6 py-3.5 text-sm text-slate-700 font-light leading-relaxed w-2/5">{item}</td>
+    <td className="px-3 py-3">
+      <input type="text" placeholder="Enter owner"
+        className="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
+    </td>
+    <td className="px-3 py-3">
+      <input type="text" placeholder="Enter team"
+        className="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
+    </td>
+    <td className="px-3 py-3">
+      <div className="relative">
+        <input type="text" placeholder="mm/dd/yyyy"
+          className="w-full border border-slate-200 rounded-lg px-3 py-1.5 pr-8 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
+        <Calendar className="w-3.5 h-3.5 text-slate-300 absolute right-2.5 top-2.5 pointer-events-none" />
+      </div>
+    </td>
+    <td className="px-3 py-3">
+      <div className="relative">
+        <input type="text" placeholder="mm/dd/yyyy"
+          className="w-full border border-slate-200 rounded-lg px-3 py-1.5 pr-8 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
+        <Calendar className="w-3.5 h-3.5 text-slate-300 absolute right-2.5 top-2.5 pointer-events-none" />
+      </div>
+    </td>
+    <td className="px-3 py-3">
+      <input type="text" placeholder="Enter status"
+        className="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
+    </td>
+  </tr>
+);
+
+const tableData = [
+  'a) Verify land ownership status (title deed, encumbrances, disputes).',
+  'b) Conduct zoning verification: confirm land classification permits industrial/service-centre use.',
+  'c) Check proximity constraints (logistics hubs, highways, restrictions near residential zones).',
+  'd) Assessment of geo-political risks (stability, regulatory volatility).',
+  'e) Obtain pre-approval from Government Authorities for company incorporation.',
+  'f) Complete environmental pre-screening requirements (potential contamination, protected zones).',
+  'g) Validate land boundaries through a certified surveyor.',
+];
 
 export default function LandAcquisitionPage() {
-  const tableData = [
-    "a) Verify land ownership status (title deed, encumbrances, disputes).",
-    "b) Conduct zoning verification: confirm land classification permits industrial/service-centre use.",
-    "c) Check proximity constraints (logistics hubs, highways, restrictions near residential zones).",
-    "d) Assessment of geo-political risks (stability, regulatory volatility).",
-    "e) Obtain pre-approval from Government Authorities for company incorporation",
-    "f) Complete environmental pre-screening requirements (potential contamination, protected zones).",
-    "g) Validate land boundaries through a certified surveyor."
-  ];
-
   return (
-    <div className="min-h-screen bg-slate-50 font-sans pb-24">
-      {/* Navigation Layer */}
-      <div className="w-full mx-auto px-6 pt-8 max-w-7xl">
-        <Link 
-          href="/phase2" 
-          className="inline-flex items-center text-[#1e4b5f] hover:text-[#153644] font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-sm"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Phase 2
-        </Link>
-      </div>
-
-      {/* Main Content */}
-      <main className="flex w-full mx-auto flex-col items-center mt-6 px-4 max-w-7xl">
-        {/* Header Block */}
-        <div className="bg-[#1e4b5f] text-white px-16 py-8 rounded-sm shadow-md text-center mb-8 inline-block min-w-[320px]">
-          <h1 className="text-2xl font-light tracking-wide">
-            Land acquisition & due diligence
-          </h1>
-        </div>
-
-        <p className="text-slate-600 mb-12 font-light">
-          Complete all sections for this category
-        </p>
-
-        {/* Content Container */}
-        <div className="w-full">
-          {/* Tabs */}
-          <div className="flex flex-wrap gap-2 mb-8">
-            <button className="flex items-center bg-[#1e4b5f] text-white px-6 py-2.5 rounded-sm text-sm font-medium shadow-sm hover:bg-[#153644] transition-colors">
-              <Upload className="w-4 h-4 mr-2" />
-              MMR
-            </button>
-            <button className="bg-[#1e4b5f] text-white px-6 py-2.5 rounded-sm text-sm font-medium shadow-sm hover:bg-[#153644] transition-colors">
-              Permits
-            </button>
-            <button className="bg-[#1e4b5f] text-white px-6 py-2.5 rounded-sm text-sm font-medium shadow-sm hover:bg-[#153644] transition-colors">
-              Licenses
-            </button>
-            <button className="bg-[#1e4b5f] text-white px-6 py-2.5 rounded-sm text-sm font-medium shadow-sm hover:bg-[#153644] transition-colors">
-              Environmental Checks
-            </button>
-          </div>
-
-          {/* Table Container */}
-          <div className="bg-white border border-slate-200 shadow-sm rounded-sm overflow-hidden min-w-[900px]">
-            {/* Table Header Section */}
-            <div className="bg-[#d2e8db] px-6 py-3 border-b border-slate-200">
-              <h2 className="text-[#1a3d2c] font-medium text-base">Land Identification & Due Diligence</h2>
-            </div>
-            <div className="px-6 py-3 border-b border-slate-200 bg-white">
-              <p className="text-sm text-slate-800 italic font-light">
-                Objective: Ensure the selected land is legally viable, compliant with zoning rules, and fit for industrial operations.
+    <div className="min-h-screen bg-slate-50 font-sans">
+      {/* ── Banner ── */}
+      <div className="bg-[#1e4b5f] text-white">
+        <div className="max-w-7xl mx-auto px-6 pt-6 pb-8">
+          <Link href="/phase2" className="inline-flex items-center gap-1.5 text-white/60 hover:text-white text-sm font-light transition-colors mb-6">
+            <ArrowLeft className="w-3.5 h-3.5" />
+            Phase 2 – Implementation
+          </Link>
+          <div className="flex items-end justify-between flex-wrap gap-4">
+            <div>
+              <div className="flex items-center gap-3 mb-1">
+                <div className="bg-white/10 p-2 rounded-lg">
+                  <MapPin className="w-5 h-5 text-white" />
+                </div>
+                <h1 className="text-2xl font-semibold tracking-wide">Land Acquisition &amp; Due Diligence</h1>
+              </div>
+              <p className="text-white/50 text-sm font-light ml-11">
+                Land identification, legal viability, and zoning compliance
               </p>
             </div>
-
-            {/* Actual Table */}
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse min-w-[1000px]">
-                <thead>
-                  <tr className="bg-white border-b border-slate-200 text-sm text-slate-700">
-                    <th className="px-6 py-4 font-medium w-1/3">Item</th>
-                    <th className="px-4 py-4 font-medium">Owner</th>
-                    <th className="px-4 py-4 font-medium">Support team</th>
-                    <th className="px-4 py-4 font-medium">Start date</th>
-                    <th className="px-4 py-4 font-medium">Target date</th>
-                    <th className="px-4 py-4 font-medium">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 text-sm text-slate-800">
-                  {tableData.map((item, index) => (
-                    <tr key={index} className="hover:bg-slate-50 transition-colors">
-                      <td className="px-6 py-3 font-light leading-snug">{item}</td>
-                      <td className="px-4 py-3">
-                        <input 
-                          type="text" 
-                          placeholder="Enter owner" 
-                          className="w-full border border-slate-200 rounded-sm px-3 py-1.5 text-sm focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 font-light"
-                        />
-                      </td>
-                      <td className="px-4 py-3">
-                        <input 
-                          type="text" 
-                          placeholder="Enter team" 
-                          className="w-full border border-slate-200 rounded-sm px-3 py-1.5 text-sm focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 font-light"
-                        />
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="relative">
-                          <input 
-                            type="text" 
-                            placeholder="mm/dd/yyyy" 
-                            className="w-full border border-slate-200 rounded-sm px-3 py-1.5 text-sm focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 font-light pr-9"
-                          />
-                          <Calendar className="w-4 h-4 text-slate-400 absolute right-2.5 top-2" />
-                        </div>
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="relative">
-                          <input 
-                            type="text" 
-                            placeholder="mm/dd/yyyy" 
-                            className="w-full border border-slate-200 rounded-sm px-3 py-1.5 text-sm focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 font-light pr-9"
-                          />
-                          <Calendar className="w-4 h-4 text-slate-400 absolute right-2.5 top-2" />
-                        </div>
-                      </td>
-                      <td className="px-4 py-3">
-                        <input 
-                          type="text" 
-                          placeholder="Enter status" 
-                          className="w-full border border-slate-200 rounded-sm px-3 py-1.5 text-sm focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 font-light"
-                        />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="flex gap-4">
+              {[{ label: 'Checklist Items', value: '7' }, { label: 'Section', value: '1.1' }].map(({ label, value }) => (
+                <div key={label} className="bg-white/10 rounded-lg px-4 py-2.5 text-center min-w-[90px]">
+                  <p className="text-lg font-bold">{value}</p>
+                  <p className="text-white/50 text-[10px] uppercase tracking-wider mt-0.5">{label}</p>
+                </div>
+              ))}
             </div>
-
           </div>
         </div>
-      </main>
+        <div className="max-w-7xl mx-auto px-6 flex gap-1 border-t border-white/10 pt-1">
+          {['MMR', 'Permits', 'Licenses', 'Environmental Checks'].map((tab, i) => (
+            <button key={tab} className={`flex items-center gap-2 px-5 py-3 text-sm font-medium transition-colors rounded-t-md ${i === 0 ? 'bg-slate-50 text-[#1e4b5f]' : 'text-white/60 hover:text-white hover:bg-white/10'}`}>
+              {i === 0 && <Upload className="w-3.5 h-3.5" />}
+              {tab}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Content ── */}
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="bg-[#1e4b5f] px-7 py-5 border-b border-slate-100">
+            <h2 className="font-semibold text-white text-base">Land Identification &amp; Due Diligence</h2>
+            <p className="text-white/60 text-xs mt-0.5 font-light">Objective: Ensure the selected land is legally viable, compliant with zoning rules, and fit for industrial operations.</p>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[1000px] text-sm">
+              <thead>
+                <tr className="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-100">
+                  <th className="px-6 py-3 font-medium text-left w-2/5">Item</th>
+                  <th className="px-3 py-3 font-medium text-left">Owner</th>
+                  <th className="px-3 py-3 font-medium text-left">Support Team</th>
+                  <th className="px-3 py-3 font-medium text-left">Start Date</th>
+                  <th className="px-3 py-3 font-medium text-left">Target Date</th>
+                  <th className="px-3 py-3 font-medium text-left">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tableData.map((item, i) => <InputRow key={i} item={item} />)}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

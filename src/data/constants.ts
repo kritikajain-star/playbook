@@ -1,5 +1,5 @@
 // src/data/constants.ts
-import { Building2, Gavel, Construction, Activity, Zap, Settings, Users, RefreshCcw, Share2, Cog, Briefcase, PlayCircle } from 'lucide-react';
+import { ArrowLeft, FolderKanban, Building2, Rocket, Wrench, Users, ShieldCheck, Map, Hammer, Lightbulb, Workflow, ClipboardCheck, ServerCog } from "lucide-react";
 
 export const LAND_DATA = [
   { id: 'a', item: 'Verify land ownership status (title deed, encumbrances, disputes).', objective: 'Ensure legal viability' },
@@ -11,17 +11,17 @@ export const LAND_DATA = [
   { id: 'g', item: 'Validate land boundaries through a certified surveyor.', objective: 'Boundary validation' },
 ];
 
-export const CATEGORIES = [
-  { title: "Land acquisition & due diligence", icon: Building2 },
-  { title: "Legal & corporate readiness", icon: Gavel },
-  { title: "Facility Design & Construction", icon: Construction },
-  { title: "Pre-Operations", icon: Activity },
-  { title: "Lean Principles", icon: Zap },
-  { title: "Equipment & Tooling", icon: Settings },
-  { title: "Manpower", icon: Users },
-  { title: "Change Management", icon: RefreshCcw },
-  { title: "Technology Transfer", icon: Share2 },
-  { title: "Operations setup", icon: Cog },
-  { title: "Back-office Setup", icon: Briefcase },
-  { title: "Go-live & Continuous Improvement", icon: PlayCircle },
+export const categories = [
+  { name: "Land acquisition & due diligence", href: "/phase2/land-acquisition", icon: Map },
+  { name: "Legal & corporate readiness", href: "/phase2/legal-readiness", icon: ShieldCheck },
+  { name: "Facility Design & Construction", href: "/phase2/facility-design-construction", icon: Building2 },
+  { name: "Pre-Operations", href: "/phase2/pre-operations", icon: Workflow },
+  { name: "Lean Principles", href: "/phase2/lean-principles", icon: Lightbulb },
+  { name: "Equipment & Tooling", href: "/phase2/equipment-tooling", icon: Wrench },
+  { name: "Manpower", href: "/phase2/manpower", icon: Users },
+  { name: "Change Management", href: "/phase2/change-management", icon: FolderKanban },
+  { name: "Technology Transfer", href: "/phase2/technology-transfer", icon: ServerCog },
+  { name: "Operations setup", href: "/phase2/operations-setup", icon: ClipboardCheck },
+  { name: "Back-office Setup", href: "/phase2/back-office-setup", icon: Rocket },
+  { name: "Go-live & Continuous Improvement", href: "/phase2/go-live-improvement", icon: Hammer },
 ];
