@@ -119,9 +119,9 @@ export default function LegalReadinessPage() {
             {/* ── Banner ── */}
             <div className="bg-[#1e4b5f] text-white">
                 <div className="max-w-7xl mx-auto px-6 pt-6 pb-8">
-                    <Link href="/phase2" className="inline-flex items-center gap-1.5 text-white/60 hover:text-white text-sm font-light transition-colors mb-6">
+                    <Link href="/" className="inline-flex items-center gap-1.5 text-white/60 hover:text-white text-sm font-light transition-colors mb-6">
                         <ArrowLeft className="w-3.5 h-3.5" />
-                        Phase 2 – Implementation
+                        Home
                     </Link>
                     <div className="flex items-end justify-between flex-wrap gap-4">
                         <div>
