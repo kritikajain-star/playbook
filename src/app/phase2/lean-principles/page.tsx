@@ -22,7 +22,7 @@ export default function LeanPrinciplesPage() {
                 </div>
                 <div className="max-w-7xl mx-auto px-6 flex gap-1 border-t border-white/10 pt-1">
                     {['MMR', 'Permits', 'Licenses', 'Environmental Checks'].map((tab, i) => (
-                        <button key={tab} className={`flex items-center gap-2 px-5 py-3 text-sm font-medium transition-colors rounded-t-md ${i === 0 ? 'bg-slate-50 text-[#1e4b5f]' : 'text-white/60 hover:text-white hover:bg-white/10'}`}>
+                        <button key={tab} className={`flex items-center gap-2 px-5 py-3 text-sm font-medium transition-colors rounded-t-md text-white/60 hover:text-white hover:bg-white/10`}>
                             {i === 0 && <Upload className="w-3.5 h-3.5" />}
                             {tab}
                         </button>
