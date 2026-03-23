@@ -1,30 +1,65 @@
-import Link from 'next/link';
-import { Fragment } from 'react';
-import { ArrowLeft, Upload, Calendar, Gavel } from 'lucide-react';
+'use client';
 
-const InputRow = ({ item }: { item: string }) => (
+import Link from 'next/link';
+import { Fragment, useState, useEffect } from 'react';
+import { ArrowLeft, Upload, Calendar, Gavel, Save, X } from 'lucide-react';
+
+const InputRow = ({ 
+    item, 
+    values, 
+    onChange 
+}: { 
+    item: string; 
+    values: any; 
+    onChange: (field: string, value: string) => void;
+}) => (
     <tr className="border-b border-slate-50 hover:bg-slate-50/70 transition-colors">
         <td className="px-6 py-3.5 text-sm text-slate-700 font-light leading-relaxed w-2/5">{item}</td>
         <td className="px-3 py-3">
-            <input type="text" placeholder="Enter owner" className="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
+            <input 
+                type="text" 
+                placeholder="Enter owner" 
+                value={values?.owner || ''}
+                onChange={(e) => onChange('owner', e.target.value)}
+                className="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
         </td>
         <td className="px-3 py-3">
-            <input type="text" placeholder="Enter team" className="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
+            <input 
+                type="text" 
+                placeholder="Enter team" 
+                value={values?.supportTeam || ''}
+                onChange={(e) => onChange('supportTeam', e.target.value)}
+                className="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
         </td>
         <td className="px-3 py-3">
             <div className="relative">
-                <input type="text" placeholder="mm/dd/yyyy" className="w-full border border-slate-200 rounded-lg px-3 py-1.5 pr-8 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
+                <input 
+                    type="text" 
+                    placeholder="mm/dd/yyyy" 
+                    value={values?.startDate || ''}
+                    onChange={(e) => onChange('startDate', e.target.value)}
+                    className="w-full border border-slate-200 rounded-lg px-3 py-1.5 pr-8 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
                 <Calendar className="w-3.5 h-3.5 text-slate-300 absolute right-2.5 top-2.5 pointer-events-none" />
             </div>
         </td>
         <td className="px-3 py-3">
             <div className="relative">
-                <input type="text" placeholder="mm/dd/yyyy" className="w-full border border-slate-200 rounded-lg px-3 py-1.5 pr-8 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
+                <input 
+                    type="text" 
+                    placeholder="mm/dd/yyyy" 
+                    value={values?.targetDate || ''}
+                    onChange={(e) => onChange('targetDate', e.target.value)}
+                    className="w-full border border-slate-200 rounded-lg px-3 py-1.5 pr-8 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
                 <Calendar className="w-3.5 h-3.5 text-slate-300 absolute right-2.5 top-2.5 pointer-events-none" />
             </div>
         </td>
         <td className="px-3 py-3">
-            <input type="text" placeholder="Enter status" className="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
+            <input 
+                type="text" 
+                placeholder="Enter status" 
+                value={values?.status || ''}
+                onChange={(e) => onChange('status', e.target.value)}
+                className="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
         </td>
     </tr>
 );
@@ -114,8 +149,43 @@ const sections13 = [
 ];
 
 export default function LegalReadinessPage() {
+    const [formData, setFormData] = useState<Record<string, any>>({});
+    const [isSaved, setIsSaved] = useState(false);
+
+    useEffect(() => {
+        const saved = localStorage.getItem('legal-readiness-data');
+        if (saved) {
+            setFormData(JSON.parse(saved));
+        }
+    }, []);
+
+    const handleInputChange = (key: string, field: string, value: string) => {
+        setFormData(prev => ({
+            ...prev,
+            [key]: {
+                ...prev[key],
+                [field]: value
+            }
+        }));
+    };
+
+    const handleSave = () => {
+        localStorage.setItem('legal-readiness-data', JSON.stringify(formData));
+        setIsSaved(true);
+        setTimeout(() => setIsSaved(false), 2000);
+    };
+
+    const handleCancel = () => {
+        const saved = localStorage.getItem('legal-readiness-data');
+        if (saved) {
+            setFormData(JSON.parse(saved));
+        } else {
+            setFormData({});
+        }
+    };
+
     return (
-        <div className="min-h-screen bg-slate-50 font-sans">
+        <div className="min-h-screen bg-slate-50 font-sans pb-20">
             {/* ── Banner ── */}
             <div className="bg-[#1e4b5f] text-white">
                 <div className="max-w-7xl mx-auto px-6 pt-6 pb-8">
@@ -165,7 +235,16 @@ export default function LegalReadinessPage() {
                     <div className="overflow-x-auto">
                         <table className="w-full min-w-[1000px] text-sm">
                             <TableHead />
-                            <tbody>{sections12.map((item, i) => <InputRow key={i} item={item} />)}</tbody>
+                            <tbody>
+                                {sections12.map((item, i) => (
+                                    <InputRow 
+                                        key={`1.2-${i}`} 
+                                        item={item} 
+                                        values={formData[`1.2-${i}`]}
+                                        onChange={(field, value) => handleInputChange(`1.2-${i}`, field, value)}
+                                    />
+                                ))}
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -183,15 +262,42 @@ export default function LegalReadinessPage() {
                                 {sections13.map((group) => (
                                     <Fragment key={group.sub}>
                                         <SubSectionHeader title={group.sub} />
-                                        {group.rows.map((item, i) => <InputRow key={i} item={item} />)}
+                                        {group.rows.map((item, i) => (
+                                            <InputRow 
+                                                key={`${group.sub}-${i}`} 
+                                                item={item} 
+                                                values={formData[`${group.sub}-${i}`]}
+                                                onChange={(field, value) => handleInputChange(`${group.sub}-${i}`, field, value)}
+                                            />
+                                        ))}
                                     </Fragment>
                                 ))}
                             </tbody>
                         </table>
                     </div>
                 </div>
+            </div>
 
+            {/* ── Action Buttons ── */}
+            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-6 py-4 z-10 shadow-[0_-4px_10px_rgba(0,0,0,0.03)]">
+                <div className="max-w-7xl mx-auto flex justify-end gap-3">
+                    <button 
+                        onClick={handleCancel}
+                        className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
+                    >
+                        <X className="w-4 h-4" />
+                        Cancel
+                    </button>
+                    <button 
+                        onClick={handleSave}
+                        className="flex items-center gap-2 px-6 py-2 text-sm font-medium text-white bg-[#1e4b5f] hover:bg-[#1a4254] rounded-lg transition-all shadow-sm active:scale-95"
+                    >
+                        <Save className="w-4 h-4" />
+                        {isSaved ? 'Saved!' : 'Save Progress'}
+                    </button>
+                </div>
             </div>
         </div>
     );
 }
+

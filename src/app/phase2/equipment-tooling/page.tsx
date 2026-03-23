@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { Fragment, useMemo, useState } from 'react';
-import { Upload, Calendar, Settings, FileText, FileSpreadsheet } from 'lucide-react';
+import { Fragment, useMemo, useState, useEffect } from 'react';
+import { Upload, Settings, FileText, FileSpreadsheet, Save, X, Calendar } from 'lucide-react';
 
 type ProductLine = 'TS' | 'PS' | 'EMS';
 
@@ -316,7 +316,6 @@ const TableHead = () => (
             <th className="px-3 py-3 font-medium text-left">Support Team</th>
             <th className="px-3 py-3 font-medium text-left">Start Date</th>
             <th className="px-3 py-3 font-medium text-left">Target Date</th>
-            <th className="px-3 py-3 font-medium text-left">Price (CHF)</th>
             <th className="px-3 py-3 font-medium text-left">Status</th>
         </tr>
     </thead>
@@ -325,7 +324,7 @@ const TableHead = () => (
 const SubSectionHeader = ({ title }: { title: string }) => (
     <tr className="bg-slate-50">
         <td
-            colSpan={7}
+            colSpan={5}
             className="px-6 py-2.5 text-xs font-semibold text-slate-500 uppercase tracking-widest border-y border-slate-100"
         >
             {title}
@@ -333,35 +332,62 @@ const SubSectionHeader = ({ title }: { title: string }) => (
     </tr>
 );
 
-const InputRow = ({ item }: { item: string }) => (
+const InputRow = ({ 
+    item, 
+    values, 
+    onChange 
+}: { 
+    item: string; 
+    values: any; 
+    onChange: (field: string, value: string) => void;
+}) => (
     <tr className="border-b border-slate-50 hover:bg-slate-50/70 transition-colors">
         <td className="px-6 py-3.5 text-sm text-slate-700 font-light leading-relaxed w-2/5">{item}</td>
         <td className="px-3 py-3">
-            <input type="text" placeholder="Enter owner" className="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
+            <input 
+                type="text" 
+                placeholder="Enter owner" 
+                value={values?.owner || ''}
+                onChange={(e) => onChange('owner', e.target.value)}
+                className="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
         </td>
         <td className="px-3 py-3">
-            <input type="text" placeholder="Enter team" className="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
+            <input 
+                type="text" 
+                placeholder="Enter team" 
+                value={values?.supportTeam || ''}
+                onChange={(e) => onChange('supportTeam', e.target.value)}
+                className="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
         </td>
         <td className="px-3 py-3">
             <div className="relative">
-                <input type="text" placeholder="mm/dd/yyyy" className="w-full border border-slate-200 rounded-lg px-3 py-1.5 pr-8 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
+                <input 
+                    type="text" 
+                    placeholder="mm/dd/yyyy" 
+                    value={values?.startDate || ''}
+                    onChange={(e) => onChange('startDate', e.target.value)}
+                    className="w-full border border-slate-200 rounded-lg px-3 py-1.5 pr-8 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
                 <Calendar className="w-3.5 h-3.5 text-slate-300 absolute right-2.5 top-2.5 pointer-events-none" />
             </div>
         </td>
         <td className="px-3 py-3">
             <div className="relative">
-                <input type="text" placeholder="mm/dd/yyyy" className="w-full border border-slate-200 rounded-lg px-3 py-1.5 pr-8 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
+                <input 
+                    type="text" 
+                    placeholder="mm/dd/yyyy" 
+                    value={values?.targetDate || ''}
+                    onChange={(e) => onChange('targetDate', e.target.value)}
+                    className="w-full border border-slate-200 rounded-lg px-3 py-1.5 pr-8 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
                 <Calendar className="w-3.5 h-3.5 text-slate-300 absolute right-2.5 top-2.5 pointer-events-none" />
             </div>
         </td>
         <td className="px-3 py-3">
-            <div className="w-full flex items-center border border-slate-200 rounded-lg bg-white focus-within:border-[#1e4b5f] focus-within:ring-1 focus-within:ring-[#1e4b5f]/20 transition-all">
-                <span className="px-2.5 text-[11px] font-medium text-slate-400 border-r border-slate-200 select-none">CHF</span>
-                <input type="number" inputMode="decimal" step="0.01" min="0" placeholder="0.00" className="w-full px-3 py-1.5 text-sm bg-transparent border-0 focus:outline-none focus:ring-0 placeholder:text-slate-300 font-light" />
-            </div>
-        </td>
-        <td className="px-3 py-3">
-            <input type="text" placeholder="Enter status" className="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
+            <input 
+                type="text" 
+                placeholder="Enter status" 
+                value={values?.status || ''}
+                onChange={(e) => onChange('status', e.target.value)}
+                className="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
         </td>
     </tr>
 );
@@ -377,6 +403,40 @@ export default function EquipmentToolingPage() {
         PS: '',
         EMS: '',
     });
+    const [formData, setFormData] = useState<Record<string, any>>({});
+    const [isSaved, setIsSaved] = useState(false);
+
+    useEffect(() => {
+        const saved = localStorage.getItem('equipment-tooling-data');
+        if (saved) {
+            setFormData(JSON.parse(saved));
+        }
+    }, []);
+
+    const handleInputChange = (key: string, field: string, value: string) => {
+        setFormData(prev => ({
+            ...prev,
+            [key]: {
+                ...prev[key],
+                [field]: value
+            }
+        }));
+    };
+
+    const handleSave = () => {
+        localStorage.setItem('equipment-tooling-data', JSON.stringify(formData));
+        setIsSaved(true);
+        setTimeout(() => setIsSaved(false), 2000);
+    };
+
+    const handleCancel = () => {
+        const saved = localStorage.getItem('equipment-tooling-data');
+        if (saved) {
+            setFormData(JSON.parse(saved));
+        } else {
+            setFormData({});
+        }
+    };
 
     const availableScopesForActiveLine = useMemo(() => {
         const fromTools = new Set(toolItems.filter(t => t.productLine === activeLine).map(t => t.scope).filter(Boolean));
@@ -440,7 +500,7 @@ export default function EquipmentToolingPage() {
     }, [toolItems]);
 
     return (
-        <div className="min-h-screen bg-slate-50 font-sans">
+        <div className="min-h-screen bg-slate-50 font-sans pb-20">
             <div className="bg-[#1e4b5f] text-white">
                 <div className="max-w-7xl mx-auto px-6 pt-6 pb-8">
                     <div className="flex items-end justify-between flex-wrap gap-4 mt-6">
@@ -501,10 +561,10 @@ export default function EquipmentToolingPage() {
                 {activeLine === 'EMS' && <EMSRequirementTable />}
 
                 {/* 3. Required Tools Section */}
-                <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden text-slate-900">
                     <div className="bg-[#1e4b5f] px-7 py-5">
                         <h2 className="font-semibold text-white text-base">{activeLine} — Required Tools</h2>
-                        <p className="text-white/60 text-xs mt-0.5 font-light">Fill in owner, team, dates, status, and the price in CHF.</p>
+                        <p className="text-white/60 text-xs mt-0.5 font-light">Fill in owner, team, status, and set dates.</p>
                     </div>
                     <div className="overflow-x-auto">
                         <table className="w-full min-w-[1150px] text-sm">
@@ -512,18 +572,48 @@ export default function EquipmentToolingPage() {
                             <tbody className="divide-y divide-slate-100">
                                 <SubSectionHeader title={`${activeLine}${selectedScopeByLine[activeLine] ? ` — ${selectedScopeByLine[activeLine]}` : ''}`} />
                                 {(filteredTools.length ? filteredTools : toolItems.filter(t => t.productLine === activeLine)).map((t) => (
-                                    <InputRow key={t.id} item={t.item} />
+                                    <InputRow 
+                                        key={t.id} 
+                                        item={t.item} 
+                                        values={formData[`${activeLine}-${t.id}`]}
+                                        onChange={(field, value) => handleInputChange(`${activeLine}-${t.id}`, field, value)}
+                                    />
                                 ))}
                                 {toolItems.filter(t => t.productLine === activeLine).length === 0 && (
                                     <Fragment>
                                         {[...Array(5)].map((_, index) => (
-                                            <InputRow key={`${activeLine}-empty-${index}`} item={`${activeLine} Workscope Entry ${index + 1}`} />
+                                            <InputRow 
+                                                key={`${activeLine}-empty-${index}`} 
+                                                item={`${activeLine} Workscope Entry ${index + 1}`} 
+                                                values={formData[`${activeLine}-empty-${index}`]}
+                                                onChange={(field, value) => handleInputChange(`${activeLine}-empty-${index}`, field, value)}
+                                            />
                                         ))}
                                     </Fragment>
                                 )}
                             </tbody>
                         </table>
                     </div>
+                </div>
+            </div>
+
+            {/* ── Action Buttons ── */}
+            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-6 py-4 z-10 shadow-[0_-4px_10px_rgba(0,0,0,0.03)]">
+                <div className="max-w-7xl mx-auto flex justify-end gap-3">
+                    <button 
+                        onClick={handleCancel}
+                        className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
+                    >
+                        <X className="w-4 h-4" />
+                        Cancel
+                    </button>
+                    <button 
+                        onClick={handleSave}
+                        className="flex items-center gap-2 px-6 py-2 text-sm font-medium text-white bg-[#1e4b5f] hover:bg-[#1a4254] rounded-lg transition-all shadow-sm active:scale-95"
+                    >
+                        <Save className="w-4 h-4" />
+                        {isSaved ? 'Saved!' : 'Save Progress'}
+                    </button>
                 </div>
             </div>
         </div>
