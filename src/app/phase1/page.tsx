@@ -209,8 +209,8 @@ export default function Phase1LogicMap() {
                 type="button"
                 className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors"
                 onClick={() => {
+                  localStorage.setItem('phase1-logic-map', JSON.stringify(formData));
                   alert("Configuration saved successfully!");
-                  console.log("Form Data:", formData);
                 }}
               >
                 <Save className="w-5 h-5 mr-2" />
