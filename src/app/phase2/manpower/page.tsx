@@ -156,7 +156,95 @@ function BulletCard({ points, dotColor }: { points: { label: string; detail: str
 
 /* ─────────────────────────────── PAGE ─────────────────────────────── */
 
+import { usePhase1Data } from '../utils/usePhase1Data';
+
 export default function ManpowerPage() {
+    const phase1 = usePhase1Data();
+
+    // ── Logic Layer F: Manpower & Organization ──
+    // Determine scale factor based on Intake (I4) and Scale (I6)
+    const getScaleFactor = () => {
+        let factor = 1.0;
+        if (phase1?.i4 === '5m_10m') factor = 1.5;
+        if (phase1?.i4 === '10m_20m') factor = 2.5;
+        if (phase1?.i4 === 'over_20m') factor = 4.0;
+
+        // Scale adjustment
+        if (phase1?.i6 === 'medium') factor *= 1.2;
+        if (phase1?.i6 === 'large') factor *= 1.8;
+        if (phase1?.i6 === 'coe') factor *= 2.5;
+
+        return factor;
+    };
+
+    const scale = getScaleFactor();
+    const activePL = phase1?.i3?.toLowerCase() || 'ps'; // Default to ps if not set
+
+    // Helper to scale headcount strings "1" or "2-3"
+    const scaleHeadcount = (val: string, s: number) => {
+        if (!val.includes('–') && !val.includes('-')) {
+            const num = parseFloat(val);
+            if (isNaN(num)) return val;
+            const scaled = Math.max(1, Math.round(num * s));
+            return scaled.toString();
+        }
+        const [min, max] = val.split(/[–-]/).map(v => parseFloat(v));
+        return `${Math.max(1, Math.round(min * s))}–${Math.max(1, Math.round(max * s))}`;
+    };
+
+    // Derived core team based on Product Line (I3) and Volume (I4)
+    const filteredCoreTeam = [
+        coreTeam[0], // Management always included
+        ...coreTeam.filter(g => {
+            if (g.group.includes('Pump Services') && activePL === 'ps') return true;
+            if (g.group.includes('Electrical Motor Services') && activePL === 'ems') return true;
+            if (g.group.includes('Turbo Services') && activePL === 'ts') return true;
+            return false;
+        }),
+        coreTeam[3], // Support always included
+    ].map(group => ({
+        ...group,
+        rows: group.rows.map(row => ({
+            ...row,
+            day1: scaleHeadcount(row.day1, scale),
+            year2: scaleHeadcount(row.year2, scale)
+        }))
+    }));
+
+    // Calculate totals
+    const calculateTotal = (isDay1: boolean) => {
+        let totalMin = 0;
+        let totalMax = 0;
+        filteredCoreTeam.forEach(g => {
+            g.rows.forEach(r => {
+                const val = isDay1 ? r.day1 : r.year2;
+                if (val.includes('–') || val.includes('-')) {
+                    const [min, max] = val.split(/[–-]/).map(v => parseFloat(v));
+                    totalMin += min;
+                    totalMax += max;
+                } else {
+                    const n = parseFloat(val);
+                    totalMin += n;
+                    totalMax += n;
+                }
+            });
+        });
+        return totalMin === totalMax ? totalMin.toString() : `${totalMin}–${totalMax}`;
+    };
+
+    const day1Total = calculateTotal(true);
+    const year2Total = calculateTotal(false);
+
+    // Filter training modules based on active PL
+    const filteredTraining = trainingModules.filter(g => {
+        if (g.group.includes('HSE')) return true;
+        if (g.group.includes('Quality')) return true;
+        if (g.group.includes('Pump Services') && activePL === 'ps') return true;
+        if (g.group.includes('Electrical Motor Services') && activePL === 'ems') return true;
+        if (g.group.includes('Turbo Services') && activePL === 'ts') return true;
+        return false;
+    });
+
     return (
         <div className="min-h-screen bg-slate-50 font-sans">
 
@@ -178,19 +266,19 @@ export default function ManpowerPage() {
                                 <div className="bg-white/10 p-2 rounded-lg">
                                     <Users className="w-5 h-5 text-white" />
                                 </div>
-                                <h1 className="text-2xl font-semibold tracking-wide">Manpower</h1>
+                                <h1 className="text-2xl font-semibold tracking-wide">Manpower & Organization</h1>
                             </div>
-                            <p className="text-white/50 text-sm font-light ml-11">
-                                Staffing plan, training matrix &amp; knowledge transfer for Small PSC + EMS operations
+                            <p className="text-white/50 text-sm font-light ml-11 uppercase leading-tight">
+                                STAFFING PLAN, TRAINING MATRIX & KNOWLEDGE TRANSFER | {phase1?.i3 || 'CORE'} - {phase1?.i6 || 'SMALL'}
                             </p>
                         </div>
 
                         {/* Stats strip */}
                         <div className="flex gap-4">
                             {[
-                                { label: 'Day-1 Staff', value: '12–14' },
-                                { label: 'Year 2 Target', value: '15–20' },
-                                { label: 'Training Modules', value: '19' },
+                                { label: 'Day-1 Staff', value: day1Total },
+                                { label: 'Year 2 Target', value: year2Total },
+                                { label: 'Training Modules', value: filteredTraining.flatMap(g => g.rows).length.toString() },
                             ].map(({ label, value }) => (
                                 <div key={label} className="bg-white/10 rounded-lg px-4 py-2.5 text-center min-w-[90px]">
                                     <p className="text-lg font-bold">{value}</p>
@@ -228,7 +316,7 @@ export default function ManpowerPage() {
                     <div className="px-7 pt-5 pb-2">
                         <h3 className="text-sm font-semibold text-slate-700 flex items-center gap-2">
                             <span className="w-1 h-4 rounded-full bg-[#1e4b5f] inline-block" />
-                            1.1 Core Team Structure (Small Workshop)
+                            1.1 Core Team Structure  --  {phase1?.i6 || 'small'} Workshop
                         </h3>
                     </div>
                     <div className="overflow-x-auto">
@@ -242,7 +330,7 @@ export default function ManpowerPage() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {coreTeam.map((group) => (
+                                {filteredCoreTeam.map((group) => (
                                     <Fragment key={group.group}>
                                         <SubHeader title={group.group} />
                                         {group.rows.map((row, i) => (
@@ -262,9 +350,9 @@ export default function ManpowerPage() {
                                 {/* Total */}
                                 <tr className="bg-[#1e4b5f] text-white text-sm font-medium">
                                     <td className="px-6 py-4">TOTAL</td>
-                                    <td className="px-4 py-4 text-center text-base font-bold">12–14</td>
-                                    <td className="px-4 py-4 text-center text-base font-bold">15–20</td>
-                                    <td className="px-4 py-4 font-light text-white/70">Scalable based on workload</td>
+                                    <td className="px-4 py-4 text-center text-base font-bold">{day1Total}</td>
+                                    <td className="px-4 py-4 text-center text-base font-bold">{year2Total}</td>
+                                    <td className="px-4 py-4 font-light text-white/70">Scalable based on workload ({phase1?.i6 || 'small'} focus)</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -309,7 +397,7 @@ export default function ManpowerPage() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {trainingModules.map((group) => (
+                                    {filteredTraining.map((group) => (
                                         <Fragment key={group.group}>
                                             <tr className="bg-blue-50/60">
                                                 <td colSpan={5} className="px-6 py-2 text-xs font-semibold text-blue-800 uppercase tracking-wider border-y border-blue-100/80">
