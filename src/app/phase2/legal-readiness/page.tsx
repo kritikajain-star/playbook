@@ -148,9 +148,29 @@ const sections13 = [
     },
 ];
 
+import { usePhase1Data } from '../utils/usePhase1Data';
+
 export default function LegalReadinessPage() {
+    const phase1 = usePhase1Data();
     const [formData, setFormData] = useState<Record<string, any>>({});
     const [isSaved, setIsSaved] = useState(false);
+
+    // Dynamic items based on Phase 1 logic
+    const isHighRisk = phase1?.i1 === 'iraq' || phase1?.i1 === 'libya';
+
+    const localSections13 = [...sections13];
+    if (isHighRisk) {
+        // According to Logic Layer A: Security Requirement
+        localSections13.push({
+            sub: '1.3.7 Security & PSD Requirements (High-Risk Country Modifier)',
+            rows: [
+                'a) Mandatory Security Assessment for the selected Industrial Zone',
+                'b) Engagement of PSD (Personal Security Detail) for site visits',
+                'c) Secure logistics and transport protocols implementation',
+                'd) High-risk insurance uplift activation'
+            ]
+        });
+    }
 
     useEffect(() => {
         const saved = localStorage.getItem('legal-readiness-data');
@@ -259,7 +279,7 @@ export default function LegalReadinessPage() {
                         <table className="w-full min-w-[1000px] text-sm">
                             <TableHead />
                             <tbody>
-                                {sections13.map((group) => (
+                                {localSections13.map((group) => (
                                     <Fragment key={group.sub}>
                                         <SubSectionHeader title={group.sub} />
                                         {group.rows.map((item, i) => (

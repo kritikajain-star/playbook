@@ -110,11 +110,23 @@ const InputRow = ({
     </tr>
 );
 
+import { usePhase1Data } from '../utils/usePhase1Data';
+
 const normalizeKey = (k: string) => k.trim().toLowerCase().replace(/\s+/g, '');
 
 export default function EquipmentToolingPage() {
+    const phase1 = usePhase1Data();
     const [activeLine, setActiveLine] = useState<ProductLine>('TS');
     const [formData, setFormData] = useState<Record<string, any>>({});
+
+    // Effect to set default tab based on Phase 1 selection
+    useEffect(() => {
+        if (phase1?.i3) {
+            const pl = phase1.i3.toUpperCase() as ProductLine;
+            setActiveLine(pl);
+        }
+    }, [phase1]);
+
     const [requirementPrices, setRequirementPrices] = useState<Record<ProductLine, any>>({
         TS: [
             {
@@ -343,9 +355,11 @@ export default function EquipmentToolingPage() {
                     </div>
                 </div>
                 <div className="max-w-7xl mx-auto px-6 flex gap-1 border-t border-white/10 pt-1">
-                    {(['TS', 'PS', 'EMS'] as ProductLine[]).map((tab) => (
-                        <button key={tab} onClick={() => setActiveLine(tab)} className={`flex items-center gap-2 px-5 py-3 text-sm font-medium transition-colors rounded-t-md ${activeLine === tab ? 'bg-slate-50 text-[#1e4b5f]' : 'text-white/60 hover:text-white hover:bg-white/10'}`}>{tab}</button>
-                    ))}
+                    {(['TS', 'PS', 'EMS'] as ProductLine[])
+                        .filter(tab => !phase1?.i3 || phase1.i3.toUpperCase() === tab)
+                        .map((tab) => (
+                            <button key={tab} onClick={() => setActiveLine(tab)} className={`flex items-center gap-2 px-5 py-3 text-sm font-medium transition-colors rounded-t-md ${activeLine === tab ? 'bg-slate-50 text-[#1e4b5f]' : 'text-white/60 hover:text-white hover:bg-white/10'}`}>{tab}</button>
+                        ))}
                 </div>
             </div>
 
@@ -353,9 +367,9 @@ export default function EquipmentToolingPage() {
 
 
                 {/* 2. DYNAMIC REQUIREMENT TABLES */}
-                {activeLine === 'TS' && <TSRequirementTable prices={requirementPrices.TS} onChange={(updated) => handlePriceChange('TS', updated)} />}
-                {activeLine === 'PS' && <PSRequirementTable prices={requirementPrices.PS} onChange={(updated) => handlePriceChange('PS', updated)} />}
-                {activeLine === 'EMS' && <EMSRequirementTable prices={requirementPrices.EMS} onChange={(updated) => handlePriceChange('EMS', updated)} />}
+                {activeLine === 'TS' && <TSRequirementTable prices={requirementPrices.TS} onChange={(updated) => handlePriceChange('TS', updated)} phase1={phase1} />}
+                {activeLine === 'PS' && <PSRequirementTable prices={requirementPrices.PS} onChange={(updated) => handlePriceChange('PS', updated)} phase1={phase1} />}
+                {activeLine === 'EMS' && <EMSRequirementTable prices={requirementPrices.EMS} onChange={(updated) => handlePriceChange('EMS', updated)} phase1={phase1} />}
 
                 {/* 3. Required Tools Section */}
                 <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden text-slate-900">

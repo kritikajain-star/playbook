@@ -2,9 +2,19 @@
 
 import { Plus } from 'lucide-react';
 
+import { Phase1Data } from '../../utils/usePhase1Data';
+
 /** EMS Requirement Table */
-export const EMSRequirementTable = ({ prices, onChange }: { prices: any[]; onChange: (updated: any[]) => void }) => {
+export const EMSRequirementTable = ({ prices, onChange, phase1 }: { 
+    prices: any[]; 
+    onChange: (updated: any[]) => void; 
+    phase1: Phase1Data | null;
+}) => {
     const tableData = Array.isArray(prices) ? prices : [];
+
+    const isDeferred = (sectionLevel: string) => {
+        return sectionLevel === 'Extras' && phase1?.i7 === 'phase1';
+    };
 
     const calculateTotal = () => {
         return tableData.reduce((total, section) => {
@@ -65,18 +75,23 @@ export const EMSRequirementTable = ({ prices, onChange }: { prices: any[]; onCha
                                 <td className="p-0 align-top">
                                     <div className="text-xs divide-y divide-slate-100">
                                         {section.items.map((item: any, itemIdx: number) => (
-                                            <div key={itemIdx} className="px-4 py-2.5 flex justify-between items-center gap-3 group hover:bg-slate-50/50 transition-colors">
-                                                <div className="flex-1">
+                                            <div key={itemIdx} className={`px-4 py-2.5 flex justify-between items-center gap-3 group hover:bg-slate-50/50 transition-colors ${isDeferred(section.level) ? 'opacity-60 bg-slate-50/50' : ''}`}>
+                                                <div className="flex-1 flex items-center gap-3">
                                                     {section.level === 'Extras' ? (
                                                         <input 
                                                             type="text"
                                                             value={item.name}
                                                             onChange={(e) => handleUpdateItem(sectionIdx, itemIdx, 'name', e.target.value)}
                                                             placeholder="Enter new tool name"
-                                                            className="w-full bg-transparent border-none focus:ring-0 p-0 font-light text-slate-700 placeholder:text-slate-300"
+                                                            className="flex-1 bg-transparent border-none focus:ring-0 p-0 font-light text-slate-700 placeholder:text-slate-300"
                                                         />
                                                     ) : (
                                                         <span className="font-light text-slate-700">{item.name}</span>
+                                                    )}
+                                                    {isDeferred(section.level) && (
+                                                        <span className="px-2 py-0.5 bg-orange-100 text-orange-600 text-[9px] font-bold rounded uppercase tracking-wider">
+                                                            Deferred / Phase 2
+                                                        </span>
                                                     )}
                                                 </div>
                                                 <div className="flex items-center">
@@ -90,7 +105,7 @@ export const EMSRequirementTable = ({ prices, onChange }: { prices: any[]; onCha
                                                 </div>
                                             </div>
                                         ))}
-                                        {section.level === 'Extras' && (
+                                        {section.level === 'Extras' && !isDeferred(section.level) && (
                                             <button 
                                                 onClick={() => handleAddItem(sectionIdx)}
                                                 className="w-full py-2 bg-slate-50 hover:bg-[#1e4b5f]/10 text-[#1e4b5f] text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-2 border-t border-slate-100 transition-all"
