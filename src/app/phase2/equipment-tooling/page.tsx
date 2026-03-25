@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Fragment, useMemo, useState, useEffect } from 'react';
-import { Upload, Settings, FileText, FileSpreadsheet, Save, X, Calendar } from 'lucide-react';
+import { Settings, Save, X, Calendar } from 'lucide-react';
 import { TSRequirementTable } from './components/TSRequirementTable';
 import { PSRequirementTable } from './components/PSRequirementTable';
 import { EMSRequirementTable } from './components/EMSRequirementTable';
@@ -114,18 +114,89 @@ const normalizeKey = (k: string) => k.trim().toLowerCase().replace(/\s+/g, '');
 
 export default function EquipmentToolingPage() {
     const [activeLine, setActiveLine] = useState<ProductLine>('TS');
-    const [scopeDocs, setScopeDocs] = useState<ScopeDoc[]>([]);
-    const [toolItems, setToolItems] = useState<ToolItem[]>([]);
-    const [selectedScopeByLine, setSelectedScopeByLine] = useState<Record<ProductLine, string>>({
-        TS: '',
-        PS: '',
-        EMS: '',
-    });
     const [formData, setFormData] = useState<Record<string, any>>({});
     const [requirementPrices, setRequirementPrices] = useState<Record<ProductLine, any>>({
-        TS: { cellBudget: 200000, overspeedStand: 15000, bedPlate: 8000, lubeSystem: 12000, electricMotor: 35000, accumulator: 20000, smallLathe: 15000, horizontalPullerPress: 25000, crane: 25000 },
-        PS: { cellBudget: 242900, scanner3D: 35000, laserEtching: 40000, laserBlasting: 250000, ndtEquipment: 60000, faroCMM: 90000, software3D: 9000, crane: 25000 },
-        EMS: { cellBudget: 180000, surgeTester: 45000, lathe: 30000, balanceMachine: 70000, crane: 25000 },
+        TS: [
+            {
+                level: 'TS Cell',
+                capability: 'Small Steam Turbine Cell Equipment Requirement\nEquipment: Steam turbine / Compressor\nLifting Capacity: 2t',
+                items: [
+                    { name: 'Overspeed Stand', price: 0 },
+                    { name: 'Bed Plate', price: 0 },
+                    { name: 'Lube System', price: 0 },
+                    { name: 'Electric Motor', price: 0 },
+                    { name: 'Accumulator', price: 0 },
+                    { name: 'Small Lathe', price: 0 },
+                    { name: 'Horizontal Puller Press', price: 0 },
+                    { name: 'Crane 2 ton', price: 0 },
+                ]
+            },
+            {
+                level: 'Extras',
+                capability: 'Additional tools and equipment specific to TS requirements.',
+                items: []
+            }
+        ],
+        PS: [
+            {
+                level: 'R1 Cell',
+                capability: 'Pump Overhaul\na. Disassembly the pump\nb. Cleaning of the parts\nc. Inspection of the parts\nd. Change standard wear parts\ne. Reassembly\nf. Report',
+                items: [
+                    { name: 'Work Bench with tooling draws', price: 0 },
+                    { name: 'Work Table (heavy duty)', price: 0 },
+                    { name: 'Hand Tooling', price: 0 },
+                    { name: 'Vee blocks with teflon', price: 0 },
+                    { name: 'Measuring equipment', price: 0 },
+                    { name: 'Spring balancers (zero gravity)', price: 0 },
+                    { name: 'Bearing heater', price: 0 },
+                    { name: 'Vertical Balancer / CNC Balancer', price: 0 },
+                    { name: 'Job bax stand + 6 x job boxes', price: 0 },
+                    { name: 'Storage Cabinet', price: 0 },
+                    { name: 'Ultrasonic thickness tester', price: 0 },
+                ]
+            },
+            {
+                level: 'Extras',
+                capability: 'Pump Overhaul Extras\n• Check Engineering values\n• Labelling of parts, name tags\n• Replace traditional sandblast\n• In house full capability\n• Reverse Engineering',
+                items: [
+                    { name: '3D Scanner', price: 0 },
+                    { name: 'Laser Etching', price: 0 },
+                    { name: 'Laser Blasting', price: 0 },
+                    { name: 'NDT Equipment', price: 0 },
+                    { name: 'Faro CMM', price: 0 },
+                    { name: '3D Software', price: 0 },
+                    { name: 'Crane 2 ton', price: 0 },
+                ]
+            }
+        ],
+        EMS: [
+            {
+                level: 'EMS Cell',
+                capability: 'Motor Overhaul\n1. Disassembly motor\n2. Cleaning of the parts\n3. Inspection of the parts\n4. Bearing change\n5. Reassembly\n6. Test Run',
+                items: [
+                    { name: 'Work Bench with tooling draws', price: 0 },
+                    { name: 'Work Table (heavy duty)', price: 0 },
+                    { name: 'Hand Tooling', price: 0 },
+                    { name: 'Pullers', price: 0 },
+                    { name: 'Measuring equipment', price: 0 },
+                    { name: 'Electrical Test equipment', price: 0 },
+                    { name: 'Bearing heater', price: 0 },
+                    { name: 'Poulan Press', price: 0 },
+                    { name: 'Curing Oven', price: 0 },
+                    { name: 'Electrical Test Panel', price: 0 },
+                ]
+            },
+            {
+                level: 'Extras',
+                capability: 'Electrical testing\nSurge Comparison\nMechanical',
+                items: [
+                    { name: 'Baker surge tester', price: 0 },
+                    { name: 'Lathe', price: 0 },
+                    { name: 'Balance machine', price: 0 },
+                    { name: 'Crane 2 ton', price: 0 },
+                ]
+            }
+        ],
     });
     const [isSaved, setIsSaved] = useState(false);
 
@@ -147,13 +218,10 @@ export default function EquipmentToolingPage() {
         }));
     };
 
-    const handlePriceChange = (line: ProductLine, key: string, value: string) => {
+    const handlePriceChange = (line: ProductLine, updated: any[]) => {
         setRequirementPrices(prev => ({
             ...prev,
-            [line]: {
-                ...prev[line],
-                [key]: value
-            }
+            [line]: updated
         }));
     };
 
@@ -173,93 +241,104 @@ export default function EquipmentToolingPage() {
         if (savedPrices) setRequirementPrices(JSON.parse(savedPrices));
         else {
             setRequirementPrices({
-                TS: { cellBudget: 200000, overspeedStand: 15000, bedPlate: 8000, lubeSystem: 12000, electricMotor: 35000, accumulator: 20000, smallLathe: 15000, horizontalPullerPress: 25000, crane: 25000 },
-                PS: { cellBudget: 242900, scanner3D: 35000, laserEtching: 40000, laserBlasting: 250000, ndtEquipment: 60000, faroCMM: 90000, software3D: 9000, crane: 25000 },
-                EMS: { cellBudget: 180000, surgeTester: 45000, lathe: 30000, balanceMachine: 70000, crane: 25000 },
+                TS: [
+                    {
+                        level: 'TS Cell',
+                        capability: 'Small Steam Turbine Cell Equipment Requirement\nEquipment: Steam turbine / Compressor\nLifting Capacity: 2t',
+                        items: [
+                            { name: 'Overspeed Stand', price: 15000 },
+                            { name: 'Bed Plate', price: 8000 },
+                            { name: 'Lube System', price: 12000 },
+                            { name: 'Electric Motor', price: 35000 },
+                            { name: 'Accumulator', price: 20000 },
+                            { name: 'Small Lathe', price: 15000 },
+                            { name: 'Horizontal Puller Press', price: 25000 },
+                            { name: 'Crane 2 ton', price: 25000 },
+                        ]
+                    },
+                    {
+                        level: 'Extras',
+                        capability: 'Additional tools and equipment specific to TS requirements.',
+                        items: []
+                    }
+                ],
+                PS: [
+                    {
+                        level: 'R1 Cell',
+                        capability: 'Pump Overhaul\na. Disassembly the pump\nb. Cleaning of the parts\nc. Inspection of the parts\nd. Change standard wear parts\ne. Reassembly\nf. Report',
+                        items: [
+                            { name: 'Work Bench with tooling draws', price: 2000 },
+                            { name: 'Work Table (heavy duty)', price: 3000 },
+                            { name: 'Hand Tooling', price: 5000 },
+                            { name: 'Vee blocks with teflon', price: 1500 },
+                            { name: 'Measuring equipment', price: 12000 },
+                            { name: 'Spring balancers (zero gravity)', price: 8000 },
+                            { name: 'Bearing heater', price: 4500 },
+                            { name: 'Vertical Balancer / CNC Balancer', price: 115000 },
+                            { name: 'Job bax stand + 6 x job boxes', price: 6500 },
+                            { name: 'Storage Cabinet', price: 4500 },
+                            { name: 'Ultrasonic thickness tester', price: 12000 },
+                        ]
+                    },
+                    {
+                        level: 'Extras',
+                        capability: 'Pump Overhaul Extras\n• Check Engineering values\n• Labelling of parts, name tags\n• Replace traditional sandblast\n• In house full capability\n• Reverse Engineering',
+                        items: [
+                            { name: '3D Scanner', price: 35000 },
+                            { name: 'Laser Etching', price: 40000 },
+                            { name: 'Laser Blasting', price: 250000 },
+                            { name: 'NDT Equipment', price: 60000 },
+                            { name: 'Faro CMM', price: 90000 },
+                            { name: '3D Software', price: 9000 },
+                            { name: 'Crane 2 ton', price: 25000 },
+                        ]
+                    }
+                ],
+                EMS: [
+                    {
+                        level: 'EMS Cell',
+                        capability: 'Motor Overhaul\n1. Disassembly motor\n2. Cleaning of the parts\n3. Inspection of the parts\n4. Bearing change\n5. Reassembly\n6. Test Run',
+                        items: [
+                            { name: 'Work Bench with tooling draws', price: 2000 },
+                            { name: 'Work Table (heavy duty)', price: 3000 },
+                            { name: 'Hand Tooling', price: 5000 },
+                            { name: 'Pullers', price: 4000 },
+                            { name: 'Measuring equipment', price: 12000 },
+                            { name: 'Electrical Test equipment', price: 25000 },
+                            { name: 'Bearing heater', price: 4500 },
+                            { name: 'Poulan Press', price: 15000 },
+                            { name: 'Curing Oven', price: 45000 },
+                            { name: 'Electrical Test Panel', price: 35000 },
+                        ]
+                    },
+                    {
+                        level: 'Extras',
+                        capability: 'Electrical testing\nSurge Comparison\nMechanical',
+                        items: [
+                            { name: 'Baker surge tester', price: 45000 },
+                            { name: 'Lathe', price: 30000 },
+                            { name: 'Balance machine', price: 70000 },
+                            { name: 'Crane 2 ton', price: 25000 },
+                        ]
+                    }
+                ],
             });
         }
     };
 
-    const availableScopesForActiveLine = useMemo(() => {
-        const fromTools = new Set(toolItems.filter(t => t.productLine === activeLine).map(t => t.scope).filter(Boolean));
-        const fromDocs = new Set(scopeDocs.filter(d => d.productLine === activeLine).map(d => d.scope).filter(Boolean));
-        return Array.from(new Set([...fromTools, ...fromDocs])).sort((a, b) => a.localeCompare(b));
-    }, [toolItems, scopeDocs, activeLine]);
-
-    const filteredTools = useMemo(() => {
-        const scope = selectedScopeByLine[activeLine];
-        return toolItems.filter(t => t.productLine === activeLine && (!scope || t.scope === scope));
-    }, [toolItems, activeLine, selectedScopeByLine]);
-
-    const handleUploadPDFs: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-        const files = e.target.files;
-        if (!files || files.length === 0) return;
-        const added: ScopeDoc[] = [];
-        for (const f of Array.from(files)) {
-            const url = URL.createObjectURL(f);
-            const base = f.name.replace(/\.[^/.]+$/, '');
-            added.push({ id: crypto.randomUUID(), name: f.name, url, productLine: activeLine, scope: base });
-        }
-        setScopeDocs(prev => [...prev, ...added]);
-        if (!selectedScopeByLine[activeLine] && added[0]?.scope) {
-            setSelectedScopeByLine(prev => ({ ...prev, [activeLine]: added[0].scope }));
-        }
-        e.currentTarget.value = '';
-    };
-
-    const handleUploadExcel: React.ChangeEventHandler<HTMLInputElement> = async (e) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-        try {
-            const xlsxMod = await import('xlsx');
-            const XLSX = (xlsxMod as any).default ?? xlsxMod;
-            const buf = await file.arrayBuffer();
-            const wb = XLSX.read(buf, { type: 'array' });
-            const ws = wb.Sheets[wb.SheetNames[0]];
-            const rows: any[] = XLSX.utils.sheet_to_json(ws, { defval: '' });
-            const parsed: ToolItem[] = rows.map((r) => {
-                const map: Record<string, any> = {};
-                Object.keys(r).forEach((k) => (map[normalizeKey(k)] = r[k]));
-                const item: string = String(map['item'] ?? '').trim();
-                const plRaw: string = String(map['productline'] ?? map['pl'] ?? '').trim().toUpperCase();
-                const scope: string = String(map['scope'] ?? '').trim();
-                const productLine = (['TS', 'PS', 'EMS'] as ProductLine[]).includes(plRaw as ProductLine) ? (plRaw as ProductLine) : activeLine;
-                if (!item) return null;
-                return { id: crypto.randomUUID(), item, productLine, scope } as ToolItem;
-            }).filter(Boolean) as ToolItem[];
-            setToolItems(parsed);
-        } catch (err) {
-            console.error('Failed to parse Excel:', err);
-        } finally {
-            e.currentTarget.value = '';
-        }
-    };
-
-    const lineCounts = useMemo(() => {
-        const byLine: Record<ProductLine, number> = { TS: 0, PS: 0, EMS: 0 };
-        for (const t of toolItems) byLine[t.productLine] += 1;
-        return byLine;
-    }, [toolItems]);
-
     return (
         <div className="min-h-screen bg-slate-50 font-sans pb-20">
             <div className="bg-[#1e4b5f] text-white">
+
                 <div className="max-w-7xl mx-auto px-6 pt-6 pb-8">
+
                     <div className="flex items-end justify-between flex-wrap gap-4 mt-6">
                         <div>
                             <div className="flex items-center gap-3 mb-1">
                                 <div className="bg-white/10 p-2 rounded-lg"><Settings className="w-5 h-5 text-white" /></div>
                                 <h1 className="text-2xl font-semibold tracking-wide">Equipment &amp; Tooling</h1>
                             </div>
-                            <p className="text-white/50 text-sm font-light ml-11">Select a product line, attach scope documents, upload a tool list, then choose a work scope.</p>
-                        </div>
-                        <div className="flex gap-4">
-                            {[{ label: 'TS Items', value: lineCounts.TS }, { label: 'PS Items', value: lineCounts.PS }, { label: 'EMS Items', value: lineCounts.EMS }].map(({ label, value }) => (
-                                <div key={label} className="bg-white/10 rounded-lg px-4 py-2.5 text-center min-w-[110px]">
-                                    <p className="text-lg font-bold">{value}</p>
-                                    <p className="text-white/50 text-[10px] uppercase tracking-wider mt-0.5">{label}</p>
-                                </div>
-                            ))}
+                            <p className="text-white/50 text-sm font-light ml-11">Select a product line and manage equipment requirements and tool lists.</p>
                         </div>
                     </div>
                 </div>
@@ -271,36 +350,12 @@ export default function EquipmentToolingPage() {
             </div>
 
             <div className="max-w-7xl mx-auto px-6 py-8">
-                {/* 1. Workscope & Documents Section */}
-                <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden mb-8">
-                    <div className="bg-[#1e4b5f] px-7 py-5">
-                        <h2 className="font-semibold text-white text-base">{activeLine} — Workscope &amp; Documents</h2>
-                        <p className="text-white/60 text-xs mt-0.5 font-light">Attach scope PDFs and upload the Excel tool list. Then select a Workscope.</p>
-                    </div>
-                    <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="border border-slate-200 rounded-lg p-4">
-                            <div className="flex items-center gap-2 mb-3"><FileText className="w-4 h-4 text-[#1e4b5f]" /><h3 className="text-sm font-medium text-slate-800">Scope Documents (PDF)</h3></div>
-                            <label className="flex items-center justify-between gap-3 border border-dashed border-slate-300 hover:border-[#1e4b5f] rounded-lg px-4 py-3 text-sm cursor-pointer transition-colors">
-                                <div className="text-slate-600"><span className="font-medium">Upload PDFs</span><span className="text-slate-400"> — multiple files</span></div>
-                                <div className="flex items-center gap-2 text-[#1e4b5f]"><Upload className="w-4 h-4" /> <span className="text-xs">Add</span></div>
-                                <input type="file" accept="application/pdf" multiple className="hidden" onChange={handleUploadPDFs} />
-                            </label>
-                        </div>
-                        <div className="border border-slate-200 rounded-lg p-4">
-                            <div className="flex items-center gap-2 mb-3"><FileSpreadsheet className="w-4 h-4 text-[#1e4b5f]" /><h3 className="text-sm font-medium text-slate-800">Tool List (Excel)</h3></div>
-                            <label className="flex items-center justify-between gap-3 border border-dashed border-slate-300 hover:border-[#1e4b5f] rounded-lg px-4 py-3 text-sm cursor-pointer transition-colors">
-                                <div className="text-slate-600"><span className="font-medium">Upload .xlsx / .xls</span></div>
-                                <div className="flex items-center gap-2 text-[#1e4b5f]"><Upload className="w-4 h-4" /> <span className="text-xs">Add</span></div>
-                                <input type="file" accept=".xlsx,.xls" className="hidden" onChange={handleUploadExcel} />
-                            </label>
-                        </div>
-                    </div>
-                </div>
+
 
                 {/* 2. DYNAMIC REQUIREMENT TABLES */}
-                {activeLine === 'TS' && <TSRequirementTable prices={requirementPrices.TS} onChange={(k, v) => handlePriceChange('TS', k, v)} />}
-                {activeLine === 'PS' && <PSRequirementTable prices={requirementPrices.PS} onChange={(k, v) => handlePriceChange('PS', k, v)} />}
-                {activeLine === 'EMS' && <EMSRequirementTable prices={requirementPrices.EMS} onChange={(k, v) => handlePriceChange('EMS', k, v)} />}
+                {activeLine === 'TS' && <TSRequirementTable prices={requirementPrices.TS} onChange={(updated) => handlePriceChange('TS', updated)} />}
+                {activeLine === 'PS' && <PSRequirementTable prices={requirementPrices.PS} onChange={(updated) => handlePriceChange('PS', updated)} />}
+                {activeLine === 'EMS' && <EMSRequirementTable prices={requirementPrices.EMS} onChange={(updated) => handlePriceChange('EMS', updated)} />}
 
                 {/* 3. Required Tools Section */}
                 <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden text-slate-900">
@@ -312,27 +367,17 @@ export default function EquipmentToolingPage() {
                         <table className="w-full min-w-[1150px] text-sm">
                             <TableHead />
                             <tbody className="divide-y divide-slate-100">
-                                <SubSectionHeader title={`${activeLine}${selectedScopeByLine[activeLine] ? ` — ${selectedScopeByLine[activeLine]}` : ''}`} />
-                                {(filteredTools.length ? filteredTools : toolItems.filter(t => t.productLine === activeLine)).map((t) => (
-                                    <InputRow
-                                        key={t.id}
-                                        item={t.item}
-                                        values={formData[`${activeLine}-${t.id}`]}
-                                        onChange={(field, value) => handleInputChange(`${activeLine}-${t.id}`, field, value)}
-                                    />
-                                ))}
-                                {toolItems.filter(t => t.productLine === activeLine).length === 0 && (
-                                    <Fragment>
-                                        {[...Array(5)].map((_, index) => (
-                                            <InputRow
-                                                key={`${activeLine}-empty-${index}`}
-                                                item={`${activeLine} Workscope Entry ${index + 1}`}
-                                                values={formData[`${activeLine}-empty-${index}`]}
-                                                onChange={(field, value) => handleInputChange(`${activeLine}-empty-${index}`, field, value)}
-                                            />
-                                        ))}
-                                    </Fragment>
-                                )}
+                                <SubSectionHeader title={`${activeLine} Workscope`} />
+                                <Fragment>
+                                    {[...Array(10)].map((_, index) => (
+                                        <InputRow
+                                            key={`${activeLine}-empty-${index}`}
+                                            item={`${activeLine} Workscope Entry ${index + 1}`}
+                                            values={formData[`${activeLine}-empty-${index}`]}
+                                            onChange={(field, value) => handleInputChange(`${activeLine}-empty-${index}`, field, value)}
+                                        />
+                                    ))}
+                                </Fragment>
                             </tbody>
                         </table>
                     </div>

@@ -4,38 +4,38 @@ import Link from 'next/link';
 import { Fragment, useState, useEffect } from 'react';
 import { ArrowLeft, Upload, Calendar, Gavel, Save, X } from 'lucide-react';
 
-const InputRow = ({ 
-    item, 
-    values, 
-    onChange 
-}: { 
-    item: string; 
-    values: any; 
+const InputRow = ({
+    item,
+    values,
+    onChange
+}: {
+    item: string;
+    values: any;
     onChange: (field: string, value: string) => void;
 }) => (
     <tr className="border-b border-slate-50 hover:bg-slate-50/70 transition-colors">
         <td className="px-6 py-3.5 text-sm text-slate-700 font-light leading-relaxed w-2/5">{item}</td>
         <td className="px-3 py-3">
-            <input 
-                type="text" 
-                placeholder="Enter owner" 
+            <input
+                type="text"
+                placeholder="Enter owner"
                 value={values?.owner || ''}
                 onChange={(e) => onChange('owner', e.target.value)}
                 className="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
         </td>
         <td className="px-3 py-3">
-            <input 
-                type="text" 
-                placeholder="Enter team" 
+            <input
+                type="text"
+                placeholder="Enter team"
                 value={values?.supportTeam || ''}
                 onChange={(e) => onChange('supportTeam', e.target.value)}
                 className="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
         </td>
         <td className="px-3 py-3">
             <div className="relative">
-                <input 
-                    type="text" 
-                    placeholder="mm/dd/yyyy" 
+                <input
+                    type="text"
+                    placeholder="mm/dd/yyyy"
                     value={values?.startDate || ''}
                     onChange={(e) => onChange('startDate', e.target.value)}
                     className="w-full border border-slate-200 rounded-lg px-3 py-1.5 pr-8 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
@@ -44,9 +44,9 @@ const InputRow = ({
         </td>
         <td className="px-3 py-3">
             <div className="relative">
-                <input 
-                    type="text" 
-                    placeholder="mm/dd/yyyy" 
+                <input
+                    type="text"
+                    placeholder="mm/dd/yyyy"
                     value={values?.targetDate || ''}
                     onChange={(e) => onChange('targetDate', e.target.value)}
                     className="w-full border border-slate-200 rounded-lg px-3 py-1.5 pr-8 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
@@ -54,9 +54,9 @@ const InputRow = ({
             </div>
         </td>
         <td className="px-3 py-3">
-            <input 
-                type="text" 
-                placeholder="Enter status" 
+            <input
+                type="text"
+                placeholder="Enter status"
                 value={values?.status || ''}
                 onChange={(e) => onChange('status', e.target.value)}
                 className="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-[#1e4b5f] focus:ring-1 focus:ring-[#1e4b5f]/20 font-light placeholder:text-slate-300 transition-all" />
@@ -237,9 +237,9 @@ export default function LegalReadinessPage() {
                             <TableHead />
                             <tbody>
                                 {sections12.map((item, i) => (
-                                    <InputRow 
-                                        key={`1.2-${i}`} 
-                                        item={item} 
+                                    <InputRow
+                                        key={`1.2-${i}`}
+                                        item={item}
                                         values={formData[`1.2-${i}`]}
                                         onChange={(field, value) => handleInputChange(`1.2-${i}`, field, value)}
                                     />
@@ -263,9 +263,9 @@ export default function LegalReadinessPage() {
                                     <Fragment key={group.sub}>
                                         <SubSectionHeader title={group.sub} />
                                         {group.rows.map((item, i) => (
-                                            <InputRow 
-                                                key={`${group.sub}-${i}`} 
-                                                item={item} 
+                                            <InputRow
+                                                key={`${group.sub}-${i}`}
+                                                item={item}
                                                 values={formData[`${group.sub}-${i}`]}
                                                 onChange={(field, value) => handleInputChange(`${group.sub}-${i}`, field, value)}
                                             />
@@ -281,14 +281,14 @@ export default function LegalReadinessPage() {
             {/* ── Action Buttons ── */}
             <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-6 py-4 z-10 shadow-[0_-4px_10px_rgba(0,0,0,0.03)]">
                 <div className="max-w-7xl mx-auto flex justify-end gap-3">
-                    <button 
+                    <button
                         onClick={handleCancel}
                         className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
                     >
                         <X className="w-4 h-4" />
                         Cancel
                     </button>
-                    <button 
+                    <button
                         onClick={handleSave}
                         className="flex items-center gap-2 px-6 py-2 text-sm font-medium text-white bg-[#1e4b5f] hover:bg-[#1a4254] rounded-lg transition-all shadow-sm active:scale-95"
                     >
