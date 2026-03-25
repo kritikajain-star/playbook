@@ -18,6 +18,7 @@ export const usePhase1Data = () => {
 
     useEffect(() => {
         const saved = localStorage.getItem('phase1-logic-map');
+        console.log("usePhase1Data: Loaded from localStorage:", saved);
         if (saved) {
             setData(JSON.parse(saved));
         }

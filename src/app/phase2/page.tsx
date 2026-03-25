@@ -8,7 +8,10 @@ import {
   Wrench, Users, FolderKanban, ServerCog, ClipboardCheck, Hammer, ArrowLeft
 } from "lucide-react";
 
+import { usePhase1Data } from './utils/usePhase1Data';
+
 export default function Phase2Home() {
+  const phase1 = usePhase1Data();
   // Simplified state: now only manages the implementation grid view
   const [view] = useState<'implementation'>('implementation');
 
@@ -55,6 +58,23 @@ export default function Phase2Home() {
           <p className="text-lg text-slate-600 font-light max-w-2xl mx-auto">
             Select a category below to begin implementation planning and execution.
           </p>
+
+          {phase1 && (
+            <div className="mt-8 inline-flex items-center gap-6 px-6 py-3 bg-white border border-slate-200 rounded-2xl shadow-sm text-sm overflow-hidden">
+              <div className="flex flex-col items-start border-r border-slate-100 pr-6">
+                <span className="text-slate-400 text-[10px] uppercase font-bold tracking-wider">Product Line</span>
+                <span className="text-slate-700 font-semibold uppercase">{phase1.i3}</span>
+              </div>
+              <div className="flex flex-col items-start border-r border-slate-100 pr-6">
+                <span className="text-slate-400 text-[10px] uppercase font-bold tracking-wider">Scale</span>
+                <span className="text-slate-700 font-semibold uppercase">{phase1.i6}</span>
+              </div>
+              <div className="flex flex-col items-start">
+                <span className="text-slate-400 text-[10px] uppercase font-bold tracking-wider">Strategy</span>
+                <span className="text-slate-700 font-semibold uppercase">{phase1.i7 === 'phase1' ? 'Phase 1 Core' : phase1.i7}</span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* --- IMPLEMENTATION CATEGORIES GRID --- */}
