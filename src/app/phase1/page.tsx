@@ -4,10 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Save } from "lucide-react";
 
-import { useRouter } from "next/navigation";
-
 export default function Phase1LogicMap() {
-  const router = useRouter();
   const [formData, setFormData] = useState({
     i1: "",
     i2: "",
@@ -212,9 +209,8 @@ export default function Phase1LogicMap() {
                 type="button"
                 className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors"
                 onClick={() => {
-                  console.log("Saving Phase 1 data:", formData);
                   localStorage.setItem('phase1-logic-map', JSON.stringify(formData));
-                  router.push('/phase2');
+                  alert("Configuration saved successfully!");
                 }}
               >
                 <Save className="w-5 h-5 mr-2" />
