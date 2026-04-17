@@ -96,7 +96,7 @@ export default function LeanPrinciplesPage() {
                         <div className="pt-2">
                             <div className="rounded-lg border border-slate-200 overflow-hidden bg-slate-50">
                                 <img
-                                    src="/images/picture1.png"
+                                    src="/images/Picture1.png"
                                     alt="Lean Principles Overview – Current to Future State"
                                     className="w-full h-auto object-contain"
                                 />
@@ -158,7 +158,7 @@ export default function LeanPrinciplesPage() {
                         <div className="pt-2">
                             <div className="rounded-lg border border-slate-200 overflow-hidden bg-slate-50">
                                 <img
-                                    src="/images/picture2.png"
+                                    src="/images/Picture2.png"
                                     alt="Spaghetti Diagram – Process Flow Example"
                                     className="w-full h-auto object-contain"
                                 />
@@ -223,7 +223,7 @@ export default function LeanPrinciplesPage() {
                         <div className="pt-2">
                             <div className="rounded-lg border border-slate-200 overflow-hidden bg-slate-50">
                                 <img
-                                    src="/images/picture3.jpg"
+                                    src="/images/Picture3.jpg"
                                     alt="Value Stream Mapping Example"
                                     className="w-full h-auto object-contain"
                                 />
@@ -292,7 +292,7 @@ export default function LeanPrinciplesPage() {
                         <div className="pt-2">
                             <div className="rounded-lg border border-slate-200 overflow-hidden bg-slate-50">
                                 <img
-                                    src="/images/picture4.jpg"
+                                    src="/images/Picture4.jpg"
                                     alt="Enhanced Service Floor Layout Example"
                                     className="w-full h-auto object-contain"
                                 />
