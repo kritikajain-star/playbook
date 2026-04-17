@@ -10,33 +10,33 @@ const coreTeam = [
     {
         group: 'Management & Administration',
         rows: [
-            { role: 'Workshop Manager', day1: '1', year2: '1', responsibilities: 'Overall operations, P&L, HSE, customer relations' },
-            { role: 'Operations Coordinator / Planner', day1: '1', year2: '1–2', responsibilities: 'Job scheduling, materials, documentation' },
-            { role: 'QA/QC Inspector', day1: '1', year2: '1–2', responsibilities: 'Inspection, testing, compliance, certification' },
+            { role: 'Workshop Manager', day1: '1', year2: '1', responsibilities: 'Overall operations, P&L, HSE, customer relations', staffType: 'Expat' as const },
+            { role: 'Operations Coordinator / Planner', day1: '1', year2: '1–2', responsibilities: 'Job scheduling, materials, documentation', staffType: 'Local' as const },
+            { role: 'QA/QC Inspector', day1: '1', year2: '1–2', responsibilities: 'Inspection, testing, compliance, certification', staffType: 'Expat' as const },
         ],
     },
     {
         group: 'Pump Services (PSC)',
         rows: [
-            { role: 'Pump Technician / Supervisor', day1: '1', year2: '1–2', responsibilities: 'Lead pump strip/assembly, technical approvals' },
-            { role: 'Pump Technician (Mid-level)', day1: '2–3', year2: '3–4', responsibilities: 'Pump disassembly, repair, assembly, testing' },
-            { role: 'Machinist / Fitter', day1: '1', year2: '1–2', responsibilities: 'Light machining, fitting, bushing installation' },
+            { role: 'Pump Technician / Supervisor', day1: '1', year2: '1–2', responsibilities: 'Lead pump strip/assembly, technical approvals', staffType: 'Expat' as const },
+            { role: 'Pump Technician (Mid-level)', day1: '2–3', year2: '3–4', responsibilities: 'Pump disassembly, repair, assembly, testing', staffType: 'Local' as const },
+            { role: 'Machinist / Fitter', day1: '1', year2: '1–2', responsibilities: 'Light machining, fitting, bushing installation', staffType: 'Local' as const },
         ],
     },
     {
         group: 'Electrical Motor Services (EMS)',
         rows: [
-            { role: 'Electrical Supervisor / Lead Winder', day1: '1', year2: '1', responsibilities: 'Motor strip, winding design, electrical testing' },
-            { role: 'Motor Winder', day1: '1–2', year2: '2–3', responsibilities: 'Coil winding, insertion, connections' },
-            { role: 'Electrical Technician / Tester', day1: '1', year2: '1–2', responsibilities: 'Electrical testing, balancing, commissioning' },
+            { role: 'Electrical Supervisor / Lead Winder', day1: '1', year2: '1', responsibilities: 'Motor strip, winding design, electrical testing', staffType: 'Expat' as const },
+            { role: 'Motor Winder', day1: '1–2', year2: '2–3', responsibilities: 'Coil winding, insertion, connections', staffType: 'Local' as const },
+            { role: 'Electrical Technician / Tester', day1: '1', year2: '1–2', responsibilities: 'Electrical testing, balancing, commissioning', staffType: 'Local' as const },
         ],
     },
     {
         group: 'Support Functions',
         rows: [
-            { role: 'HSE Officer (shared/part-time initially)', day1: '0.5', year2: '1', responsibilities: 'Safety inspections, training, incident management' },
-            { role: 'Stores / Materials Coordinator', day1: '1', year2: '1', responsibilities: 'Parts management, inventory, receiving/dispatch' },
-            { role: 'Helper / General Worker', day1: '2', year2: '2–3', responsibilities: 'Cleaning, material handling, general support' },
+            { role: 'HSE Officer (shared/part-time initially)', day1: '0.5', year2: '1', responsibilities: 'Safety inspections, training, incident management', staffType: 'Local' as const },
+            { role: 'Stores / Materials Coordinator', day1: '1', year2: '1', responsibilities: 'Parts management, inventory, receiving/dispatch', staffType: 'Local' as const },
+            { role: 'Helper / General Worker', day1: '2', year2: '2–3', responsibilities: 'Cleaning, material handling, general support', staffType: 'Local' as const },
         ],
     },
 ];
@@ -310,10 +310,11 @@ export default function ManpowerPage() {
                         <table className="w-full min-w-[800px] text-sm">
                             <thead>
                                 <tr className="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-y border-slate-100">
-                                    <th className="px-6 py-3 font-medium text-left w-1/3">Role / Position</th>
+                                    <th className="px-6 py-3 font-medium text-left w-1/4">Role / Position</th>
                                     <th className="px-4 py-3 font-medium text-center">Day-1</th>
                                     <th className="px-4 py-3 font-medium text-center">Year 2</th>
                                     <th className="px-4 py-3 font-medium text-left">Key Responsibilities</th>
+                                    <th className="px-4 py-3 font-medium text-center">Staff Type</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -330,6 +331,15 @@ export default function ManpowerPage() {
                                                     <Pill value={row.year2} color="bg-emerald-50 text-emerald-700" />
                                                 </td>
                                                 <td className="px-4 py-3.5 text-slate-500 font-light leading-relaxed">{row.responsibilities}</td>
+                                                <td className="px-4 py-3.5 text-center">
+                                                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
+                                                        row.staffType === 'Expat'
+                                                            ? 'bg-orange-50 text-orange-700 ring-1 ring-orange-200'
+                                                            : 'bg-sky-50 text-sky-700 ring-1 ring-sky-200'
+                                                    }`}>
+                                                        {row.staffType}
+                                                    </span>
+                                                </td>
                                             </tr>
                                         ))}
                                     </Fragment>
@@ -340,6 +350,7 @@ export default function ManpowerPage() {
                                     <td className="px-4 py-4 text-center text-base font-bold">{day1Total}</td>
                                     <td className="px-4 py-4 text-center text-base font-bold">{year2Total}</td>
                                     <td className="px-4 py-4 font-light text-white/70">Scalable based on workload ({phase1?.i6 || 'small'} focus)</td>
+                                    <td className="px-4 py-4"></td>
                                 </tr>
                             </tbody>
                         </table>

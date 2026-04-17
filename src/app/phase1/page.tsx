@@ -11,7 +11,7 @@ export default function Phase1LogicMap() {
     i3: "",
     i4: "",
     i5: "",
-    i6: "",
+    i6: "small",  // System-derived, not user-selectable
     i7: "",
     i8: "",
     i9: "",
@@ -54,13 +54,13 @@ export default function Phase1LogicMap() {
     },
     {
       id: "i2",
-      label: "2. City / Industrial Zone",
+      label: "2. City",
       options: [
-        { value: "", label: "Select Zone Type..." },
+        { value: "", label: "Select City..." },
         { value: "basra", label: "Basra" },
-        { value: "rumaila", label: "Rumaila" },
-        { value: "mina_al_ahmadi", label: "Mina Al Ahmadi" },
-        { value: "sohar", label: "Sohar" },
+        { value: "baghdad", label: "Baghdad" },
+        { value: "kirkuk", label: "Kirkuk" },
+
       ],
     },
     {
@@ -95,20 +95,10 @@ export default function Phase1LogicMap() {
         { value: "over_600", label: "> 600 jobs/year" },
       ],
     },
-    {
-      id: "i6",
-      label: "6. Service Center Scale",
-      options: [
-        { value: "", label: "Select Scale..." },
-        { value: "small", label: "Small" },
-        { value: "medium", label: "Medium" },
-        { value: "large", label: "Large" },
-        { value: "coe", label: "Center of Excellence (CoE)" },
-      ],
-    },
+
     {
       id: "i7",
-      label: "7. Implementation Phasing Strategy",
+      label: "6.. Implementation Phasing Strategy",
       options: [
         { value: "", label: "Select Strategy..." },
         { value: "phase1", label: "Phase 1 only (Core services)" },
@@ -118,7 +108,7 @@ export default function Phase1LogicMap() {
     },
     {
       id: "i8",
-      label: "8. Local Capability vs Import Dependency",
+      label: "7. Local Capability vs Import Dependency",
       options: [
         { value: "", label: "Select Capability Mix..." },
         { value: "high_local", label: "High local capability" },
@@ -128,7 +118,7 @@ export default function Phase1LogicMap() {
     },
     {
       id: "i9",
-      label: "9. Target Go-Live Timeline",
+      label: "8. Target Go-Live Timeline",
       options: [
         { value: "", label: "Select Timeline..." },
         { value: "under_6m", label: "< 6 months" },
@@ -206,6 +196,36 @@ export default function Phase1LogicMap() {
                   </select>
                 </div>
               ))}
+            </div>
+
+            {/* System-Derived: Service Center Scale */}
+            <div className="mt-8 pt-6 border-t border-slate-200">
+              <div className="mb-4">
+                <h2 className="text-lg font-medium text-slate-800 mb-2">
+                  System-Derived Inputs
+                </h2>
+                <p className="text-slate-500 text-sm">
+                  These values are automatically determined based on your selections above.
+                </p>
+              </div>
+              <div className="bg-slate-50 rounded-xl border border-slate-200 p-5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-slate-700">Service Center Scale</p>
+                    <p className="text-xs text-slate-400 mt-0.5">Derived from order intake, job volume, and product line selections</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-teal-50 text-teal-700 ring-1 ring-teal-200">
+                      {formData.i6 === 'small' && 'Small'}
+                      {formData.i6 === 'medium' && 'Medium'}
+                      {formData.i6 === 'large' && 'Large'}
+                      {formData.i6 === 'coe' && 'Center of Excellence (CoE)'}
+                      {!formData.i6 && 'Pending'}
+                    </span>
+
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* White Spot Analysis Section */}

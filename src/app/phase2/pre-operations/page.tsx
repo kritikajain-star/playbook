@@ -108,6 +108,29 @@ export default function PreOperationsPage() {
                         </p>
                     </div>
                 </div>
+
+                {/* ── Floor Plan Diagram ── */}
+                <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div className="bg-[#1e4b5f] px-7 py-5">
+                        <h2 className="font-semibold text-white text-base flex items-center gap-2">
+                            <Upload className="w-4 h-4" />
+                            Workshop Floor Plan
+                        </h2>
+                        <p className="text-white/60 text-xs mt-0.5 font-light">Reference layout diagram for workshop zoning and equipment placement</p>
+                    </div>
+                    <div className="p-6">
+                        <div className="rounded-lg border border-slate-200 overflow-hidden bg-slate-50">
+                            <img
+                                src="/images/floor-plan.jfif"
+                                alt="Workshop Floor Plan – Functional Zoning & Equipment Layout"
+                                className="w-full h-auto object-contain"
+                            />
+                        </div>
+                        <p className="text-xs text-slate-400 font-light mt-3 italic text-center">
+                            Figure: Workshop floor plan illustrating functional zones and linear workflow layout.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     );
