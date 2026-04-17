@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Save } from "lucide-react";
+import { ArrowLeft, Save, Upload, FileText } from "lucide-react";
 
 export default function Phase1LogicMap() {
   const [formData, setFormData] = useState({
@@ -15,11 +15,26 @@ export default function Phase1LogicMap() {
     i7: "",
     i8: "",
     i9: "",
-    i10: "",
   });
+
+  const [whiteSpotFile, setWhiteSpotFile] = useState<File | null>(null);
+  const [uploadedFileName, setUploadedFileName] = useState<string>("");
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setWhiteSpotFile(file);
+      setUploadedFileName(file.name);
+    }
+  };
+
+  const handleRemoveFile = () => {
+    setWhiteSpotFile(null);
+    setUploadedFileName("");
   };
 
   const inputs = [
@@ -113,17 +128,7 @@ export default function Phase1LogicMap() {
     },
     {
       id: "i9",
-      label: "9. Operating Model",
-      options: [
-        { value: "", label: "Select Operating Model..." },
-        { value: "standalone", label: "Stand-alone Service Center" },
-        { value: "hub_spoke", label: "Hub-and-Spoke (linked to regional hub)" },
-        { value: "satellite", label: "Satellite / Light SC" },
-      ],
-    },
-    {
-      id: "i10",
-      label: "10. Target Go-Live Timeline",
+      label: "9. Target Go-Live Timeline",
       options: [
         { value: "", label: "Select Timeline..." },
         { value: "under_6m", label: "< 6 months" },
@@ -203,18 +208,107 @@ export default function Phase1LogicMap() {
               ))}
             </div>
 
+            {/* White Spot Analysis Section */}
+            <div className="mt-12 pt-8 border-t border-slate-200">
+              <div className="mb-6">
+                <h2 className="text-lg font-medium text-slate-800 mb-2">
+                  White Spot Analysis
+                </h2>
+                <p className="text-slate-500 text-sm">
+                  Upload the White Spot Analysis report from your external program.
+                </p>
+              </div>
+
+              <div className="bg-slate-50 rounded-xl border-2 border-dashed border-slate-300 p-8 hover:border-teal-400 hover:bg-teal-50/30 transition-all duration-200">
+                <div className="flex flex-col items-center justify-center">
+                  {!whiteSpotFile ? (
+                    <>
+                      <div className="mb-4 p-3 bg-teal-100 rounded-lg">
+                        <Upload className="w-6 h-6 text-teal-600" />
+                      </div>
+                      <label
+                        htmlFor="white-spot-upload"
+                        className="cursor-pointer text-center"
+                      >
+                        <p className="text-sm font-medium text-slate-800">
+                          Drop your file here or{" "}
+                          <span className="text-teal-600 hover:text-teal-700">
+                            click to browse
+                          </span>
+                        </p>
+                        <p className="text-xs text-slate-500 mt-1">
+                          Supported formats: PDF, Excel, CSV, Word
+                        </p>
+                      </label>
+                      <input
+                        id="white-spot-upload"
+                        type="file"
+                        onChange={handleFileUpload}
+                        accept=".pdf,.xlsx,.xls,.csv,.doc,.docx"
+                        className="hidden"
+                      />
+                    </>
+                  ) : (
+                    <div className="w-full">
+                      <div className="flex items-center justify-between bg-white rounded-lg p-4 border border-slate-200">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-teal-100 rounded-lg">
+                            <FileText className="w-5 h-5 text-teal-600" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-slate-800">
+                              {uploadedFileName}
+                            </p>
+                            <p className="text-xs text-slate-500">
+                              {(whiteSpotFile?.size || 0) > 1024 * 1024
+                                ? `${((whiteSpotFile?.size || 0) / (1024 * 1024)).toFixed(2)} MB`
+                                : `${((whiteSpotFile?.size || 0) / 1024).toFixed(2)} KB`}
+                            </p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={handleRemoveFile}
+                          className="px-3 py-2 text-sm text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                      <label
+                        htmlFor="white-spot-upload"
+                        className="mt-3 inline-flex text-sm text-teal-600 hover:text-teal-700 cursor-pointer"
+                      >
+                        Choose different file
+                      </label>
+                      <input
+                        id="white-spot-upload"
+                        type="file"
+                        onChange={handleFileUpload}
+                        accept=".pdf,.xlsx,.xls,.csv,.doc,.docx"
+                        className="hidden"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
             {/* Save Configuration Button */}
             <div className="mt-10 pt-6 border-t border-slate-200 flex justify-end">
               <button
                 type="button"
                 className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors"
                 onClick={() => {
-                  localStorage.setItem('phase1-logic-map', JSON.stringify(formData));
-                  alert("Configuration saved successfully!");
+                  const data = {
+                    logicMap: formData,
+                    whiteSpotAnalysis: uploadedFileName || "No file uploaded",
+                    uploadedAt: new Date().toISOString(),
+                  };
+                  localStorage.setItem('phase1-logic-map', JSON.stringify(data));
+                  alert("Configuration and White Spot Analysis saved successfully!");
                 }}
               >
                 <Save className="w-5 h-5 mr-2" />
-                Save Logic Map Inputs
+                Save Configuration & Analysis
               </button>
             </div>
           </div>
