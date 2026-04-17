@@ -43,7 +43,7 @@ export default function OperationsSetupPage() {
         <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
             <div className="bg-[#1e4b5f] text-white">
                 <div className="max-w-7xl mx-auto px-6 pt-6 pb-8">
-                    <Link href="/" className="inline-flex items-center gap-1.5 text-white/60 hover:text-white text-sm font-light transition-colors mb-6">
+                    <Link href="/phase2" className="inline-flex items-center gap-1.5 text-white/60 hover:text-white text-sm font-light transition-colors mb-6">
                         <ArrowLeft className="w-3.5 h-3.5" />
                         Home
                     </Link>
@@ -58,14 +58,6 @@ export default function OperationsSetupPage() {
                             </p>
                         </div>
                     </div>
-                </div>
-                <div className="max-w-7xl mx-auto px-6 flex gap-1 border-t border-white/10 pt-1">
-                    {['SOPs', 'Workflows', 'Supply Chain', 'ERP Setup'].map((tab, i) => (
-                        <button key={tab} className={`flex items-center gap-2 px-5 py-3 text-sm font-medium transition-colors rounded-t-md text-white/60 hover:text-white hover:bg-white/10`}>
-                            {i === 0 && <Settings className="w-3.5 h-3.5" />}
-                            {tab}
-                        </button>
-                    ))}
                 </div>
             </div>
 
@@ -160,5 +152,6 @@ export default function OperationsSetupPage() {
         </div>
     );
 }
+
 
 

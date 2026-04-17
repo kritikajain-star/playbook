@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Fragment, useMemo, useState, useEffect } from 'react';
-import { Settings, Save, X, Calendar } from 'lucide-react';
+import { Settings, Save, X, Calendar, ArrowLeft } from 'lucide-react';
 import { TSRequirementTable } from './components/TSRequirementTable';
 import { PSRequirementTable } from './components/PSRequirementTable';
 import { EMSRequirementTable } from './components/EMSRequirementTable';
@@ -343,8 +343,16 @@ export default function EquipmentToolingPage() {
             <div className="bg-[#1e4b5f] text-white">
 
                 <div className="max-w-7xl mx-auto px-6 pt-6 pb-8">
+                    {/* Breadcrumb */}
+                    <Link
+                        href="/phase2"
+                        className="inline-flex items-center gap-1.5 text-white/60 hover:text-white text-sm font-light transition-colors mb-6"
+                    >
+                        <ArrowLeft className="w-3.5 h-3.5" />
+                        Home
+                    </Link>
 
-                    <div className="flex items-end justify-between flex-wrap gap-4 mt-6">
+                    <div className="flex items-end justify-between flex-wrap gap-4">
                         <div>
                             <div className="flex items-center gap-3 mb-1">
                                 <div className="bg-white/10 p-2 rounded-lg"><Settings className="w-5 h-5 text-white" /></div>
@@ -353,13 +361,6 @@ export default function EquipmentToolingPage() {
                             <p className="text-white/50 text-sm font-light ml-11">Select a product line and manage equipment requirements and tool lists.</p>
                         </div>
                     </div>
-                </div>
-                <div className="max-w-7xl mx-auto px-6 flex gap-1 border-t border-white/10 pt-1">
-                    {(['TS', 'PS', 'EMS'] as ProductLine[])
-                        .filter(tab => !phase1?.i3 || phase1.i3.toUpperCase() === tab)
-                        .map((tab) => (
-                            <button key={tab} onClick={() => setActiveLine(tab)} className={`flex items-center gap-2 px-5 py-3 text-sm font-medium transition-colors rounded-t-md ${activeLine === tab ? 'bg-slate-50 text-[#1e4b5f]' : 'text-white/60 hover:text-white hover:bg-white/10'}`}>{tab}</button>
-                        ))}
                 </div>
             </div>
 

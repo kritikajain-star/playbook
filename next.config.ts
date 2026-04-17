@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: "export",   // REQUIRED for static export + IIS deployment
+  reactStrictMode: true,
 };
 
 export default nextConfig;
